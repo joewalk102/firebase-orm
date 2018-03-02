@@ -1,0 +1,7 @@
+.idea/
+venv/
+*.pytest_cache/
+/tests/experiment.py
+/firebase_orm.egg-info/
+/dist/
+/build/
