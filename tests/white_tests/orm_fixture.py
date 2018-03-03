@@ -7,7 +7,7 @@ class TModel(models.Model):
     name = models.CharField()
     type_test = models.CharField(db_column='type')
     author = models.CharField()
-    brief = models.TextField()
+    brief = models.CharField()
 
     class Meta:
         db_table = 'test'
