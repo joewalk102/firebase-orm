@@ -47,7 +47,7 @@ class Model(metaclass=ModelBase):
         ключи - названия полей в базе данных
         значения - название полей модели
         """
-        attrs = self.__dict__
+        attrs = self.__class__.__dict__
         for key in attrs:
             val = attrs[key]
             if issubclass(type(val), Field):
@@ -55,21 +55,21 @@ class Model(metaclass=ModelBase):
 
         """инициализация происходит в двух случаях
         1. Создание `Model(name='any name')`
-            id устанавливается из автоинкремента менеджера
-            наполняет self._meta значениями полей, если переданы параметры в kwargs
-        2. Наполнение из базы данных `Model.object.get(id='1')`
-            наполнение self._meta передается Manager
+            - id устанавливается из автоинкремента менеджера
+            - наполняет self._meta значениями полей, если переданы параметры в kwargs
+        2. Установка атрибутов из базы данных `Model.object.get(id='1')`
+            добавление атрибутов в self._meta происходит в Manager
         """
         if not self._meta.pop('__no_autoincrement', False):
+            # id в self._meta
             self._meta['id'] = self.objects._id_autoincrement()
+            # kwargs в self._meta
+            for key, value in self.objects._model_fields.items():
+                self._meta[key] = kwargs.get(value)
 
     def __eq__(self, other):
-        keys = self.objects._model_fields.values()
-        fields = self._meta
-        for key in keys:
-            if not fields.get(key):
-                fields[key] = None
-        return fields == other._meta
+        if self._meta == other._meta:
+            return True
 
     def save(self):
         self.objects._save(self.id, self._meta)

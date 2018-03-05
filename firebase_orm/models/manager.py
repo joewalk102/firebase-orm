@@ -29,8 +29,8 @@ class Manager:
 
         data = self._get_data(pk)
         # установка значений полей базы данных в model._meta
-        for key, value in self._model_fields.items():
-            obj._meta[value] = data.get(key)
+        for key in self._model_fields:
+            obj._meta[key] = data.get(key)
         return obj
 
     def _id_autoincrement(self):
