@@ -23,8 +23,10 @@ class Manager:
         if type(pk) is not int:
             raise TypeError
 
-        self._model._meta['__no_autoincrement'] = True
+        self._model._Model__autoincrement = False
         obj = self._model()
+        self._model._Model__autoincrement = True
+
         obj._meta = {'id': pk}
 
         data = self._get_data(pk)
