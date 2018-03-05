@@ -36,10 +36,15 @@ class Manager:
         return obj
 
     def _id_autoincrement(self):
-        docs = self._get_ref_col().order_by('id', direction=firestore.Query.DESCENDING).limit(1).get()
-        for d in docs:
-            pk = int(d.id) + 1
-            return pk
+        def get_fast_id():
+            docs = self._get_ref_col().order_by(
+                'id',
+                direction=firestore.Query.DESCENDING
+            ).limit(1).get()
+            for d in docs:
+                return int(d.id)
+        db_pk = get_fast_id()
+        return db_pk+1 if db_pk else 0
 
     def _get_ref_col(self):
         db_table = self._model.Meta.db_table

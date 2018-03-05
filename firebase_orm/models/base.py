@@ -58,10 +58,7 @@ class Model(metaclass=ModelBase):
         """
         if self._Model__autoincrement:
             # id в self._meta
-            pk = self.objects._id_autoincrement()
-            if not pk:
-                pk = 0
-            self._meta['id'] = pk
+            self._meta['id'] = self.objects._id_autoincrement()
             # kwargs в self._meta
             for key, value in self.objects._model_fields.items():
                 self._meta[key] = kwargs.get(value)

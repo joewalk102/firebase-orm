@@ -42,3 +42,15 @@ def test_not_change_id(model):
     with pytest.raises(CanNotBeChanged):
         inst = model.objects.get(id=1)
         inst.id = 2
+
+
+def test_pk0_if_not_collection(models):
+    db_t = 'non-existent collection'
+
+    class TModel(models.Model):
+        class Meta:
+            db_table = db_t
+
+    inst = TModel()
+    pk = inst.id
+    assert pk == 0
