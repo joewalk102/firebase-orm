@@ -28,24 +28,17 @@ class Manager:
         obj._meta = {'id': pk}
 
         data = self._get_data(pk)
-        self._set_attr_to_meta(obj, data)
-
-        return obj
-
-    def _set_attr_to_meta(self, obj, data):
         # установка значений полей базы данных в model._meta
-        fields = self._model_fields
-        for key in fields:
-            field_key = fields.get(key)
-            val = data.get(key)
-            obj._meta[field_key] = val
+        for key, value in self._model_fields.items():
+            obj._meta[value] = data.get(key)
+        return obj
 
     def _id_autoincrement(self):
         doc_ref = self.db.collection('test')
         doc = doc_ref.order_by('id', direction=firestore.Query.DESCENDING).limit(1).get()
         for d in doc:
-            id = int(d.id) + 1
-            return id
+            pk = int(d.id) + 1
+            return pk
 
     def _get_ref(self, pk):
         db_table = self._model.Meta.db_table
@@ -54,7 +47,6 @@ class Manager:
 
     def _get_data(self, pk):
         doc_ref = self._get_ref(pk)
-
         try:
             doc = doc_ref.get()
             data = doc.to_dict()
