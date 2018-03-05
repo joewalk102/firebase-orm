@@ -9,8 +9,13 @@ class ModelBase(type):
         parents = [b for b in bases if isinstance(b, ModelBase)]
         if not parents:
             return super_new(cls, name, bases, attrs)
-
+        """
+        _meta содержит данные:
+            значения полей в базе данных для дескрипторов
+            ключем является именно название поля базы данных, а не имя переменной дескриптора
+        """
         attrs['_meta'] = {}
+
         attrs['objects'] = Manager()
         attrs['id'] = IDField()
         return super_new(cls, name, bases, attrs)
@@ -20,7 +25,7 @@ class ModelBase(type):
         if not parents:
             return
 
-        # добавление модели в менеджер
+        # добавление класса модели в менеджер
         manager = attrs['objects']
         manager._model = self
 
@@ -35,10 +40,18 @@ class ModelBase(type):
 class Model(metaclass=ModelBase):
     objects = Manager()
 
-    def __init__(self):
+    def __init__(self, **kwargs):
+        """все объекты и данные экземпляра хранятся в словаре self._meta"""
+
+        """инициализация происходит в двух случаях
+        1. Создание `Model(name='any name')`
+            id устанавливается из автоинкремента менеджера
+            наполняет self._meta значениями полей, если переданы параметры в kwargs
+        2. Наполнение из базы данных `Model.object.get(id='1')`
+            наполнение self._meta передается Manager
+        """
         if not self._meta.pop('__get', False):
-            id = self.objects._id_autoincrement()
-            self._meta['id'] = id
+            self._meta['id'] = self.objects._id_autoincrement()
 
     def __eq__(self, other):
         keys = self.objects._model_fields.values()

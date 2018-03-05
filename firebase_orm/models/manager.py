@@ -15,11 +15,6 @@ class Manager:
 
     def get(self, **kwargs):
         """
-        Perform the query and return a single object matching the given
-        id.
-
-        :param id: id
-        :type id: int
         :return: Model
         :raise: ObjectDoesNotExist
         """
@@ -28,18 +23,17 @@ class Manager:
         pk = kwargs.get('id')
         if type(pk) is not int:
             raise TypeError
-        data = self._get_data(pk)
 
         if not self._model_fields:
-            attrs = self._model.__dict__
-            for key in attrs:
-                val = attrs[key]
-                if issubclass(type(val), Field):
-                    self._model_fields[val.__dict__.get('db_column')] = key
+            self._dict_db_column()
+
+        data = self._get_data(pk)
+
         self._model._meta['__get'] = True
         obj = self._model()
         obj._meta = {'id': pk}
 
+        # установка значений полей базы данных в model._meta
         fields = self._model_fields
         for key in fields:
             field_key = fields.get(key)
@@ -47,6 +41,20 @@ class Manager:
             obj._meta[field_key] = val
 
         return obj
+
+    def _dict_db_column(self):
+        """
+        установка полей модели в self._model_fields
+        ключи - названия полей в базе данных
+        значения - название полей модели
+        :return: dict
+        :rtype: dict
+        """
+        attrs = self._model.__dict__
+        for key in attrs:
+            val = attrs[key]
+            if issubclass(type(val), Field):
+                self._model_fields[val.__dict__.get('db_column')] = key
 
     def _id_autoincrement(self):
         doc_ref = self.db.collection('test')
