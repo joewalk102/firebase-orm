@@ -11,3 +11,8 @@ def test_not_equal_obj(model):
     inst1 = model()
     assert inst != inst1
 
+
+def test_repr(model):
+    inst = model.objects.get(id=1)
+    repr_str = f'<{type(inst).__name__}: {inst.__str__()}>'
+    assert inst.__repr__() == repr_str

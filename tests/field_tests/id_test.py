@@ -31,13 +31,14 @@ def test_append_id_to_id_docs(model, all_doc_ids):
 
 
 def test_fields_id_presents_in_doc(get_document):
-    """id должен быть тип int и присутствовать в поле документа"""
+    """id должен быть тип int и присутствовать в поле базы данных"""
     pk = '1'
     doc = get_document(id=pk)
     assert doc.get('id') == int(pk)
 
 
 def test_not_change_id(model):
+    """id не изменяемый"""
     with pytest.raises(CanNotBeChanged):
         inst = model.objects.get(id=1)
         inst.id = 2

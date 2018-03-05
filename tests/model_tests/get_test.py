@@ -3,6 +3,11 @@ import pytest
 from firebase_orm.exeptions import DoesNotExist
 
 
+def test_error_kwarg(model):
+    with pytest.raises(TypeError):
+        model.objects.get(100)
+
+
 @pytest.mark.run(order=2)
 # @pytest.mark.cloud
 def test_get(add_document, model):
