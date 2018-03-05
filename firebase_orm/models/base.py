@@ -42,6 +42,16 @@ class Model(metaclass=ModelBase):
 
     def __init__(self, **kwargs):
         """все объекты и данные экземпляра хранятся в словаре self._meta"""
+        """
+        инициализация полей модели Manager
+        ключи - названия полей в базе данных
+        значения - название полей модели
+        """
+        attrs = self.__dict__
+        for key in attrs:
+            val = attrs[key]
+            if issubclass(type(val), Field):
+                self.objects._model_fields[val.__dict__.get('db_column')] = key
 
         """инициализация происходит в двух случаях
         1. Создание `Model(name='any name')`
@@ -50,7 +60,7 @@ class Model(metaclass=ModelBase):
         2. Наполнение из базы данных `Model.object.get(id='1')`
             наполнение self._meta передается Manager
         """
-        if not self._meta.pop('__get', False):
+        if not self._meta.pop('__no_autoincrement', False):
             self._meta['id'] = self.objects._id_autoincrement()
 
     def __eq__(self, other):

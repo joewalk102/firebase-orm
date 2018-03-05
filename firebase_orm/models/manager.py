@@ -2,7 +2,6 @@ import google
 from firebase_admin import firestore
 
 from firebase_orm.exeptions import DoesNotExist
-from firebase_orm.models.fields import Field
 
 
 class Manager:
@@ -24,37 +23,22 @@ class Manager:
         if type(pk) is not int:
             raise TypeError
 
-        if not self._model_fields:
-            self._dict_db_column()
-
-        data = self._get_data(pk)
-
-        self._model._meta['__get'] = True
+        self._model._meta['__no_autoincrement'] = True
         obj = self._model()
         obj._meta = {'id': pk}
 
+        data = self._get_data(pk)
+        self._set_attr_to_meta(obj, data)
+
+        return obj
+
+    def _set_attr_to_meta(self, obj, data):
         # установка значений полей базы данных в model._meta
         fields = self._model_fields
         for key in fields:
             field_key = fields.get(key)
             val = data.get(key)
             obj._meta[field_key] = val
-
-        return obj
-
-    def _dict_db_column(self):
-        """
-        установка полей модели в self._model_fields
-        ключи - названия полей в базе данных
-        значения - название полей модели
-        :return: dict
-        :rtype: dict
-        """
-        attrs = self._model.__dict__
-        for key in attrs:
-            val = attrs[key]
-            if issubclass(type(val), Field):
-                self._model_fields[val.__dict__.get('db_column')] = key
 
     def _id_autoincrement(self):
         doc_ref = self.db.collection('test')
