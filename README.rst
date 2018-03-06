@@ -41,8 +41,8 @@ Create model:
 
 
     class Article(models.Model):
-        headline = models.CharField()
-        type_article = models.CharField(db_column='type')
+        headline = models.TextString()
+        type_article = models.TextString(db_column='type')
 
         class Meta:
             db_table = 'medications'
@@ -79,3 +79,27 @@ Use API:
     Traceback (most recent call last):
         ...
     DoesNotExist: Article matching query does not exist.
+
+Field options:
+==============
+
+The following arguments are available to all field types. All are optional.
+
+**Field.db_column**
+
+    If contains characters that aren’t allowed in Python variable names – use db_column.
+    The name of the firestore key in document to use for this field.
+    If this isn’t given, FirebaseORM will use the field’s name.
+
+
+Field types:
+============
+
+TextString
+""""""""""
+**class CharField(**options)**
+
+    Text string Up to 1,048,487 bytes (1 MiB - 89 bytes).
+    Only the first 1,500 bytes of the UTF-8 representation are considered by queries.
+
+    TextString has not extra required argument.
