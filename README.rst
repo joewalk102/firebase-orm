@@ -81,9 +81,26 @@ then call save() to save it to the database.
     >>> a.headline
     'Django is cool'
 
+**Saving changes to objects**
+
+To save changes to an object that’s already in the database, use save().
+
+Given a Article instance a that has already been saved to the database,
+this example changes its name and updates its record in the database:
+
+.. code-block:: pycon
+
+    >>> a.headline = 'FirebaseORM is cool'
+    >>> a.save()
+
+This performs an document.update() method behind the scenes.
+FirebaseORM doesn’t hit the database until you explicitly call save().
+
+.. code-block:: pycon
+
     # Firebase ORM provides a rich database lookup API.
     >>> Article.objects.get(id=1)
-    <Article: Django is cool>
+    <Article: FirebaseORM is cool>
     >>> Article.objects.get(id=2)
     Traceback (most recent call last):
         ...
