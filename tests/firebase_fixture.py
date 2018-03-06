@@ -23,20 +23,22 @@ def db():
         del ids
 
 
-@pytest.fixture(scope='session')
+@pytest.fixture(scope='function')
 def del_all(db):
-    ids = []
-    count_list = -1
-    while True:
-        docs = db.collection('test').limit(4).get()
-        for doc in docs:
-            ids.append(doc.id)
-            doc.reference.delete()
+    def del_all_in_collection(collection_name):
+        ids = []
+        count_list = -1
+        while True:
+            docs = db.collection(collection_name).limit(4).get()
+            for doc in docs:
+                ids.append(doc.id)
+                doc.reference.delete()
 
-        if len(ids) == count_list:
-            break
-        count_list = len(ids)
-    del ids
+            if len(ids) == count_list:
+                break
+            count_list = len(ids)
+        del ids
+    return del_all_in_collection
 
 
 @pytest.fixture
