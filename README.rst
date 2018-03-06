@@ -52,17 +52,26 @@ Create model:
 
 Use API:
 """"""""
+**Creating objects**
+
+To represent cloud firestore data in Python objects, FirebaseORM uses an intuitive system:
+A model class represents a collection,
+and an instance of that class represents a document in collection.
+
+To create an object, instantiate it using keyword arguments to the model class,
+then call save() to save it to the database.
 
 .. code-block:: pycon
 
     # Import the models we created
     >>> from models import Article
-
     # Create a new Article.
     >>> a = Article(headline='Django is cool')
-
     # Save the object into the database. You have to call save() explicitly.
     >>> a.save()
+
+
+.. code-block:: pycon
 
     # Now it has an ID.
     >>> a.id
@@ -79,6 +88,8 @@ Use API:
     Traceback (most recent call last):
         ...
     DoesNotExist: Article matching query does not exist.
+
+
 
 Field options:
 ==============
