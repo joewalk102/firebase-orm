@@ -1,5 +1,5 @@
 from firebase_orm.models.manager import Manager
-from firebase_orm.models.fields import Field, IDField
+from firebase_orm.models.fields import Field, AutoField
 
 
 class ModelBase(type):
@@ -11,7 +11,7 @@ class ModelBase(type):
             return super_new(cls, name, bases, attrs)
 
         attrs['objects'] = Manager()
-        attrs['id'] = IDField()
+        attrs['id'] = AutoField()
         return super_new(cls, name, bases, attrs)
 
     def __init__(self, name, bases, attrs):

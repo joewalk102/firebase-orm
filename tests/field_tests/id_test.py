@@ -3,7 +3,7 @@ import pytest
 from firebase_orm.exeptions import CanNotBeChanged
 
 
-class TestIdType:
+class TestAutoFieldType:
     def test_id_type_int(self, model):
         """ID должен возвращаться типа int"""
         inst = model.objects.get(id=1)

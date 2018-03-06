@@ -1,4 +1,4 @@
-Firebase ORM Python
+FirebaseORM Python
 =======================================
 Django like models for NoSQL database Firestore.
 
@@ -94,6 +94,16 @@ The following arguments are available to all field types. All are optional.
 
 Field types:
 ============
+
+AutoField
+"""""""""
+**class AutoField()**
+
+    By default, FirebaseORM gives each model the following field:
+
+    .. code-block:: python
+
+        id = models.AutoField(primary_key=True)
 
 TextString
 """"""""""

@@ -19,7 +19,7 @@ class TextString(Field):
     pass
 
 
-class IDField:
+class AutoField:
     def __init__(self):
         self.db_column = 'id'
 
