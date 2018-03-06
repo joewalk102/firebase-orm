@@ -43,11 +43,9 @@ def test_not_change_id(model):
 
 
 def test_pk0_if_non_existent_collection(models):
-    db_t = 'non-existent collection'
-
     class TModel(models.Model):
         class Meta:
-            db_table = db_t
+            db_table = 'non-existent collection'
 
     inst = TModel()
     pk = inst.id
