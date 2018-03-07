@@ -30,7 +30,7 @@ def g_error(method_to_decorate):
             while retrying_the_request  < RETRYING_THE_REQUEST:
                 # TODO add to readme
                 print(f'Warning: network slow or not!'
-                      f'\n Попытка подключения {count_pass} из 4')
+                      f'\n Попытка подключения {retrying_the_request} из 4')
                 wrapper(*args, **kwargs)
             raise NetworkTimeOut
 
