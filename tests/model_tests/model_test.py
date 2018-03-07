@@ -10,9 +10,13 @@ class TestEqual:
         inst1 = model()
         assert inst != inst1
 
-    def test_different_models_equal(self, model, model2):
-        inst1 = model(name='name', type_test='test_type')
+    def test_different_models_equal(self, new_collection):
+        model1 = new_collection()
+        model2 = new_collection()
+        inst1 = model1(name='name', type_test='test_type')
+        inst1.save()
         inst2 = model2(name='name', type_test='test_type')
+        inst2.save()
         assert inst1 != inst2
 
 
