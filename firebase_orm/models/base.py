@@ -36,18 +36,19 @@ class Model(metaclass=ModelBase):
     __autoincrement = True
 
     def __init__(self, **kwargs):
-        self._meta = {}
         """все объекты и данные экземпляра хранятся в словаре self._meta"""
+        self._meta = meta = {}
         """
         инициализация полей модели Manager
         ключи - названия полей в базе данных
         значения - название полей модели
         """
+        model_fields = self.objects._model_fields
         attrs = self.__class__.__dict__
         for key in attrs:
             val = attrs[key]
             if issubclass(type(val), Field):
-                self.objects._model_fields[val.__dict__.get('db_column')] = key
+                model_fields[val.__dict__.get('db_column')] = key
 
         """инициализация происходит в двух случаях
         1. Создание `Model(name='any name')`
@@ -58,17 +59,21 @@ class Model(metaclass=ModelBase):
         """
         if self._Model__autoincrement:
             # id в self._meta
-            self._meta['id'] = self.objects._id_autoincrement()
+            meta['id'] = self.objects._id_autoincrement()
             # kwargs в self._meta
-            for key, value in self.objects._model_fields.items():
-                self._meta[key] = kwargs.get(value)
+            for key, value in model_fields.items():
+                meta[key] = kwargs.get(value)
 
     def __eq__(self, other):
         if self._meta == other._meta:
             return True
 
     def save(self):
+        # TODO create transaction
         self.objects._save(self.id, self._meta)
 
+    def __str__(self):
+        return '%s object (%s)' % (self.__class__.__name__, self.id)
+
     def __repr__(self):
-        return f'<{type(self).__name__}: {self.__str__()}>'
+        return '<%s: %s>' % (self.__class__.__name__, self)

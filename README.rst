@@ -71,6 +71,18 @@ then call save() to save it to the database.
     >>> a.save()
 
 
+**Retrieving all objects**
+
+The simplest way to retrieve documents from a collections is to get all of them.
+To do this, use the all() method on a Manager:
+
+.. code-block:: pycon
+
+    >>> all_Article = Article.objects.all()
+
+The all() method returns a list instance Article of all the collection in the database.
+
+
 .. code-block:: pycon
 
     # Now it has an ID.
