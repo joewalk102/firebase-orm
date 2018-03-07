@@ -1,16 +1,21 @@
-import google
-from firebase_admin import firestore
-from grpc._channel import _Rendezvous
-
 from firebase_orm.exceptions import DoesNotExist, NetworkTimeOut
 
+from firebase_admin import firestore
+import google
+from grpc._channel import _Rendezvous
 
-count_pass = 0
+try:
+    from settings import RETRYING_THE_REQUEST
+except ImportError:
+    RETRYING_THE_REQUEST = 4
+
+
+retrying_the_request = 0
 
 
 def g_error(method_to_decorate):
-    global count_pass
-    count_pass = 0
+    global retrying_the_request
+    retrying_the_request = 0
 
     def wrapper(*args, **kwargs):
         try:
@@ -20,9 +25,10 @@ def g_error(method_to_decorate):
             raise DoesNotExist
 
         except _Rendezvous:
-            global count_pass
-            count_pass += 1
-            while count_pass < 1:
+            global retrying_the_request
+            retrying_the_request += 1
+            while retrying_the_request  < RETRYING_THE_REQUEST:
+                # TODO add to readme
                 print(f'Warning: network slow or not!'
                       f'\n Попытка подключения {count_pass} из 4')
                 wrapper(*args, **kwargs)
