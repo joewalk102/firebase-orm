@@ -1,6 +1,6 @@
 import pytest
 
-from firebase_orm.exeptions import DoesNotExist
+from firebase_orm.exceptions import DoesNotExist
 
 
 def test_error_kwarg(model):

@@ -1,6 +1,6 @@
 import pytest
 
-from firebase_orm.exeptions import CanNotBeChanged
+from firebase_orm.exceptions import CanNotBeChanged
 
 
 class TestAutoFieldType:

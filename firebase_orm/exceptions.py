@@ -5,3 +5,7 @@ class DoesNotExist(Exception):
 
 class CanNotBeChanged(Exception):
     pass
+
+
+class NetworkTimeOut(Exception):
+    pass
