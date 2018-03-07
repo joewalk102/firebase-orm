@@ -6,6 +6,7 @@ class TestTextStringType:
         model_null.save()
         model_null = model.objects.get(id=1)
         assert model_null.name is None
+# TODO check the size of the data
 
     def test_save_null_str_of_spaces(self, model):
         """при сохранение строки с пробелами в поле, в базе появляется значение null"""

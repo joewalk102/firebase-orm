@@ -17,22 +17,43 @@ class Manager:
         :return: Model
         :raise: ObjectDoesNotExist
         """
-        if not kwargs.get('id'):
-            raise TypeError
         pk = kwargs.get('id')
+        if not pk and pk is not 0:
+            raise TypeError
         if type(pk) is not int:
             raise TypeError
 
+        document = self._get_data(pk)
+
+        return self._doc_to_instance(document)
+
+    def all(self):
+        documents = []
+        count = 0
+        count_list = -1
+        while True:
+            docs = self._get_ref_col().offset(count).limit(10).get()
+            for doc in docs:
+                documents.append(doc.to_dict())
+                count += 1
+
+            if len(documents) == count_list:
+                break
+            count_list = len(documents)
+        instances = []
+        for document in documents:
+            instances.append(self._doc_to_instance(document))
+        return instances
+
+    def _doc_to_instance(self, document):
         self._model._Model__autoincrement = False
         obj = self._model()
         self._model._Model__autoincrement = True
 
-        obj._meta = {'id': pk}
-
-        data = self._get_data(pk)
+        obj._meta = {'id': document['id']}
         # установка значений полей базы данных в model._meta
         for key in self._model_fields:
-            obj._meta[key] = data.get(key)
+            obj._meta[key] = document.get(key)
         return obj
 
     def _id_autoincrement(self):
@@ -44,7 +65,7 @@ class Manager:
             for d in docs:
                 return int(d.id)
         db_pk = get_fast_id()
-        return db_pk+1 if db_pk else 0
+        return db_pk+1 if db_pk or db_pk is 0 else 0
 
     def _get_ref_col(self):
         db_table = self._model.Meta.db_table
