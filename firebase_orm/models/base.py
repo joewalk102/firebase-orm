@@ -65,7 +65,7 @@ class Model(metaclass=ModelBase):
                 meta[key] = kwargs.get(value)
 
     def __eq__(self, other):
-        if self._meta == other._meta:
+        if self._meta == other._meta and self.Meta.db_table == other.Meta.db_table:
             return True
 
     def save(self):
