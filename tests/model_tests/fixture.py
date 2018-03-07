@@ -17,20 +17,29 @@ def random_name():
             else:
                 word += random.choice(VOWELS)
         return word
+
     return generate_word
+
+
+names = []
 
 
 @pytest.fixture
 def new_collection(random_name, del_all):
     def return_model():
-        global name
+        global names
         name = random_name()
+        names.append(name)
 
         class Model(models.Model):
             type_test = models.TextString(db_column='type')
 
             class Meta:
                 db_table = name
+
         return Model
-    yield return_model
-    del_all(name)
+    try:
+        yield return_model
+    finally:
+        for i in names:
+            del_all(i)
