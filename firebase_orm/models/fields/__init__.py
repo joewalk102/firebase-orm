@@ -15,7 +15,7 @@ class Field:
             obj._meta[self.db_column] = None
 
 
-class TextString(Field):
+class TextField(Field):
     pass
 
 

@@ -32,7 +32,7 @@ def new_collection(random_name, del_all):
         names.append(name)
 
         class Model(models.Model):
-            type_test = models.TextString(db_column='type')
+            type_test = models.TextField(db_column='type')
 
             class Meta:
                 db_table = name

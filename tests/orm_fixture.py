@@ -4,8 +4,8 @@ from firebase_orm import models
 
 
 class TModel(models.Model):
-    name = models.TextString()
-    type_test = models.TextString(db_column='type')
+    name = models.TextField()
+    type_test = models.TextField(db_column='type')
 
     class Meta:
         db_table = 'test'

@@ -41,8 +41,8 @@ Create model:
 
 
     class Article(models.Model):
-        headline = models.TextString()
-        type_article = models.TextString(db_column='type')
+        headline = models.TextField()
+        type_article = models.TextField(db_column='type')
 
         class Meta:
             db_table = 'medications'
@@ -145,11 +145,11 @@ AutoField
 
         id = models.AutoField(primary_key=True)
 
-TextString
+TextField
 """"""""""
-**class TextString(**options)**
+**class TextField(**options)**
 
     Text string Up to 1,048,487 bytes (1 MiB - 89 bytes).
     Only the first 1,500 bytes of the UTF-8 representation are considered by queries.
 
-    TextString has not extra required argument.
+    TextField has not extra required argument.
